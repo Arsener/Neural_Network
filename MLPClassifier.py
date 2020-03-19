@@ -1,4 +1,4 @@
-import numpy as np
+from utils import *
 
 
 class MLPClassifier:
@@ -21,11 +21,11 @@ class MLPClassifier:
             pre = self.hidden_layers_sizes[i]
 
         if activation == 'relu':
-            self.act = self.relu
-            self.der_act = self.derivation_relu
+            self.act = relu
+            self.der_act = derivation_relu
         elif activation == 'sigmoid':
-            self.act = self.sigmoid
-            self.der_act = self.derivation_sigmoid
+            self.act = sigmoid
+            self.der_act = derivation_sigmoid
         else:
             raise ValueError("activation function must be 'relu' or 'sigmoid'.")
 
@@ -33,27 +33,6 @@ class MLPClassifier:
         self.z = []
         self.delta_w = []
         self.delta_b = []
-
-    def sigmoid(self, x):
-        return 1 / (1 + np.exp(-x))
-
-    def derivation_sigmoid(self, x):
-        return self.sigmoid(x) * (1 - self.sigmoid(x))
-
-    def relu(self, x):
-        return np.maximum(0, x)
-
-    def derivation_relu(self, x):
-        x[x < 0] = 0
-        x[x > 0] = 1
-        return x
-
-    def softmax(self, x):
-        e = np.exp(x)
-        return e / np.sum(e, axis=1).reshape(x.shape[0], 1)
-
-    def cross_entropy(self, y, y_hat):
-        return -np.sum(y * np.log(y_hat + 1e-6)) / y.shape[0]
 
     def forward(self, X):
         # 将X作为输入层的激活层输出
@@ -64,7 +43,7 @@ class MLPClassifier:
             else:
                 self.z.append(np.dot(self.act(self.z[-1]), w) + b)
 
-        return self.softmax(np.dot(self.act(self.z[-1]), self.weights[-1]) + self.bias[-1])
+        return softmax(np.dot(self.act(self.z[-1]), self.weights[-1]) + self.bias[-1])
 
     def backward(self, y, y_hat):
         self.delta_b.clear()
@@ -109,7 +88,7 @@ class MLPClassifier:
                     self.bias[i] -= self.learning_rate * self.delta_b[self.layer_num - i]
 
             y_pred = self.forward(X)
-            loss = self.cross_entropy(y, y_pred)
+            loss = cross_entropy(y, y_pred)
             print('Epoch {}: Loss: {}'.format(epoch, loss))
 
     def predict_prob(self, X):
