@@ -81,7 +81,7 @@ class MLPClassifier:
 
             # 更新对z的导数
             if layer_index > 0:
-                delta_z = np.dot(delta_z, self.weights[layer_index].T) * self.der_act(self.z[layer_index]) / n
+                delta_z = np.dot(delta_z, self.weights[layer_index].T) * self.der_act(self.z[layer_index])
             layer_index -= 1
 
     def fit(self, X, y):

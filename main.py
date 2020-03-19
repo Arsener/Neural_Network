@@ -21,9 +21,8 @@ def accuracy(Y, y_hat):
 trainX, trainY = loadData("train")
 testX, testY = loadData("test")
 
-mlp = MLPClassifier((50,), learning_rate=0.05, max_epoch=300, activation='relu')
+mlp = MLPClassifier((50,), learning_rate=0.05, max_epoch=40, activation='relu')
 mlp.fit(trainX, trainY)
 y_pred = mlp.predict_prob(testX)
 
 print(accuracy(testY, y_pred))
-print(mlp.predict(testX))
