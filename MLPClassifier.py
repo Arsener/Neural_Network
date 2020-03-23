@@ -16,7 +16,11 @@ class MLPClassifier:
         pre = self.hidden_layers_sizes[0]
         for i in range(1, self.layer_num):
             self.weights.append(
-                2 * (np.random.random(size=(pre, self.hidden_layers_sizes[i])) / pre ** 0.5) - 1. / pre ** .5)
+                # He Initialization
+                np.random.randn(pre, self.hidden_layers_sizes[i]) * np.sqrt(2 / pre)
+                # Another way of He Initialization
+                # np.random.normal(0, (2 / pre) ** .5, (pre, self.hidden_layers_sizes[i]))
+            )
             self.bias.append(np.random.randn(1, self.hidden_layers_sizes[i]))
             pre = self.hidden_layers_sizes[i]
 
@@ -66,10 +70,9 @@ class MLPClassifier:
     def fit(self, X, y):
         input_shape = X.shape[1]
         output_shape = y.shape[1]
-        self.weights[0] = 2 * (np.random.random(size=(input_shape, self.hidden_layers_sizes[0])) /
-                               input_shape ** 0.5) - 1. / input_shape ** .5
-        self.weights.append(2 * (np.random.random(size=(self.hidden_layers_sizes[-1], output_shape)) /
-                                 self.hidden_layers_sizes[-1] ** 0.5) - 1. / self.hidden_layers_sizes[-1] ** .5)
+        self.weights[0] = np.random.randn(input_shape, self.hidden_layers_sizes[0]) * np.sqrt(2 / input_shape)
+        self.weights.append(
+            np.random.randn(self.hidden_layers_sizes[-1], output_shape) * np.sqrt(2 / self.hidden_layers_sizes[-1]))
         self.bias.append(np.random.randn(1, output_shape))
 
         n_sample = X.shape[0]
